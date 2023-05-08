@@ -30,7 +30,7 @@ adam = tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08)
 steps = len(train_data) // batch_size + 1
 print('steps >>', steps)
 
-EPOCHS = 3
+EPOCHS = 15
 
 for epoch in range(EPOCHS):
     epoch_loss = 0
@@ -49,30 +49,39 @@ for epoch in range(EPOCHS):
 
 
 
+# 전체 모델을 HDF5 파일로 저장
+# model.save('Kimgu_model.h5')
 
-# test
-def return_answer_by_chatbot(user_text):
-    print('***'*20)
-    print('질문 >>', user_text)
-    sent = '<usr>' + user_text + '<sys>'
-    input_ids = [tokenizer.bos_token_id] + tokenizer.encode(sent)
-    input_ids = tf.convert_to_tensor([input_ids])
-    output = model.generate(input_ids, max_length=50, do_sample=True, top_k=20)
-    sentence = tokenizer.decode(output[0].numpy().tolist())
-    chatbot_response = sentence.split('<sys> ')[1].replace('</s>', '')
-    print('대답 >>', chatbot_response)
-    return chatbot_response
+tokenizer.save_pretrained('Kimgu_chatbot')
+model.save_pretrained('Kimgu_chatbot')
 
 
-return_answer_by_chatbot('별명이 있니')
-return_answer_by_chatbot('기차를 타봤니?')
-return_answer_by_chatbot('감옥 생활은 어때')
-return_answer_by_chatbot('백범 김구는 운동을 잘하니?')
-return_answer_by_chatbot('백범 김구는 커피를 좋아해요?')
-return_answer_by_chatbot('김구너는 인천에서 무엇을 했니?')
-return_answer_by_chatbot('인생의 목적이 무엇이니?')
-return_answer_by_chatbot('결혼했니?')
-return_answer_by_chatbot('아들이 있니?')
-return_answer_by_chatbot('초등학교를 설립한 적이 있니?')
-return_answer_by_chatbot('인천에서 무엇을 했니?')
-return_answer_by_chatbot('독립운동을 왜 했나요?')
+# tokenizer2 = AutoTokenizer.from_pretrained('Kimgu_chatbot', bos_token='</s>', eos_token='</s>', pad_token='<pad>')
+# model2 = TFGPT2LMHeadModel.from_pretrained('Kimgu_chatbot', from_pt=True)
+#
+# # test
+# def return_answer_by_chatbot(user_text):
+#     print('***'*20)
+#     print('질문 >>', user_text)
+#     sent = '<usr>' + user_text + '<sys>'
+#     input_ids = [tokenizer2.bos_token_id] + tokenizer2.encode(sent)
+#     input_ids = tf.convert_to_tensor([input_ids])
+#     output = model2.generate(input_ids, max_length=50, do_sample=True, top_k=20)
+#     sentence = tokenizer2.decode(output[0].numpy().tolist())
+#     chatbot_response = sentence.split('<sys> ')[1].replace('</s>', '')
+#     print('대답 >>', chatbot_response)
+#     return chatbot_response
+#
+#
+# return_answer_by_chatbot('별명이 있니')
+# return_answer_by_chatbot('기차를 타봤니?')
+# return_answer_by_chatbot('감옥 생활은 어때')
+# return_answer_by_chatbot('백범 김구는 운동을 잘하니?')
+# return_answer_by_chatbot('백범 김구는 커피를 좋아해요?')
+# return_answer_by_chatbot('김구너는 인천에서 무엇을 했니?')
+# return_answer_by_chatbot('인생의 목적이 무엇이니?')
+# return_answer_by_chatbot('결혼했니?')
+# return_answer_by_chatbot('아들이 있니?')
+# return_answer_by_chatbot('초등학교를 설립한 적이 있니?')
+# return_answer_by_chatbot('인천에서 무엇을 했니?')
+# return_answer_by_chatbot('독립운동을 왜 했나요?')
