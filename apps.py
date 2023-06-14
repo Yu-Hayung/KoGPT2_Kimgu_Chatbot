@@ -28,3 +28,28 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
+from transformers import AutoTokenizer
+from transformers import TFGPT2LMHeadModel
+
+
+class ChatBotCharacter:
+    def __init__(self, character_id):
+        self.character_id = character_id
+
+    def f_tokenizer(self):
+        tokenizer = AutoTokenizer.from_pretrained(f'{self.character_id}_chatbot', bos_token='</s>', eos_token='</s>', pad_token='<pad>')
+        model = TFGPT2LMHeadModel.from_pretrained(f'{self.character_id}_chatbot')
+        return tokenizer, model
+
+    def f_InsetName(self, data):
+        CharacterName = ''
+        if self.character_id == 'Kimgu':
+            CharacterName = '김구'
+        elif self.character_id == 'MacArthur':
+            CharacterName = '맥아더'
+        elif self.character_id == 'Leejungseob':
+            CharacterName = '이중섭 화가'
+
+        InsetNameData = f'{CharacterName}는 {data}'
+        return InsetNameData, CharacterName
+

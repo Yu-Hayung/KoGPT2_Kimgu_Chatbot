@@ -20,7 +20,7 @@ model = TFGPT2LMHeadModel.from_pretrained('skt/kogpt2-base-v2', from_pt=True)
 import pandas as pd
 import tqdm
 
-train_data = pd.read_csv('Data/KimguData.csv', encoding='utf-8')
+train_data = pd.read_csv('Data/LeeJungSeobData.csv', encoding='utf-8')
 
 print('train_data >>', len(train_data))
 
@@ -32,7 +32,8 @@ def chat_dataset():
         sent = tokenizer.encode('<usr>' + question + '<sys>' + answer)
         yield bos_token + sent + eos_token
 
-batch_size = 32
+# batch_size = 32
+batch_size = 4 #GPU 메모리 작아서 8로 진행
 dataset = tf.data.Dataset.from_generator(chat_dataset, output_types=tf.int32)
 dataset = dataset.padded_batch(batch_size=batch_size, padded_shapes=(None,), padding_values=tokenizer.pad_token_id)
 
@@ -40,6 +41,7 @@ dataset = dataset.padded_batch(batch_size=batch_size, padded_shapes=(None,), pad
 adam = tf.keras.optimizers.Adam(learning_rate=3e-5, epsilon=1e-08)
 steps = len(train_data) // batch_size + 1
 print('steps >>', steps)
+print('batch_size >>', batch_size)
 
 EPOCHS = 50
 
@@ -69,5 +71,5 @@ for epoch in range(EPOCHS):
 # 전체 모델을 HDF5 파일로 저장
 # model.save('Kimgu_model.h5')
 
-tokenizer.save_pretrained('Kimgu_chatbot')
-model.save_pretrained('Kimgu_chatbot')
+tokenizer.save_pretrained('Leejungseob_chatbot')
+model.save_pretrained('Leejungseob_chatbot')
